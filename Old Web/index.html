@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="divport" content="width=device-width, initial-scale=1.0 user-scalable=no">
+    <title>智能共享日程 | Inftime</title>
+    <link rel="stylesheet" href="https://inftime.cn/new.css">
+    <!-- <link rel="stylesheet" href="https://auto.inftime.com.cn/web/new.css"> -->
+    <!-- <link rel="icon" href="https://ws1.sinaimg.cn/large/006tKfTcly1g18enhm02qj30sg0sgt9n.jpg" type="image/x-icon" />
+    <link rel="shortcut icon" href="https://ws1.sinaimg.cn/large/006tKfTcly1g18enhm02qj30sg0sgt9n.jpg"
+        type="image/x-icon" /> -->
+    <link rel="icon" href="https://inftime.cn/change_left_bottom.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="https://inftime.cn/change_left_bottom.png" type="image/x-icon" />
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" type="text/css" href="./loaders.css" />
+    <!-- <link rel="stylesheet" href="./new.css"> -->
+
+<body
+    style="background-color:white;height: 100%;margin: 0px;font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;">
+    <div id="main" style="height:100%;flex-direction: column;" class="weui-flex">
+        <div class="head_top">
+            <div class="logo">
+                <!-- <image class="logo_img" src="https://inftime.cn/white_left_bottom.png"></image> -->
+                <span style="position: relative;top: 2px;font-weight: 400;">Inftime</span>
+            </div>
+            <div class="user_box weui-flex" style="vertical-align: center;cursor:pointer;" v-on:click="navToLogin"
+                v-if="logged==false||logged=='false'">
+                点击登录
+            </div>
+            <div class="user_box weui-flex" style="vertical-align: center" v-if="logged==true||logged=='true'">
+
+                <div style="margin-right:10px">{{nickname}}</div>
+                <el-dropdown @command="boxChoose">
+                    <image :src="image_url" style="width: 40px;height: 40px;border-radius: 50%;"></image>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item disabled>我的</el-dropdown-item>
+                        <el-dropdown-item command="login_out" divided>退出登录</el-dropdown-item>
+                    </el-dropdown-menu>
+                    <!-- <div class="cancel_box" style="display: none"  @mouseleave="hideTag" @mouseover="showTag" id="cancel_box" v-on:click="loginOut">取消登录</div> -->
+                </el-dropdown>
+            </div>
+        </div>
+
+        <div v-if="logged==false||logged=='false'">
+            <div
+                style="display: -webkit-box;display: -ms-flexbox;display: flex;-webkit-box-align: center;-ms-flex-align: center;align-items: center;-webkit-box-pack: justify;-ms-flex-pack: justify;justify-content: space-between;position: relative;-webkit-box-sizing: border-box;box-sizing: border-box;margin: 0 auto;width: 1120px;max-width: calc(100vw - 40px);height: 400px;ht: 400px;margin-top: 30px;">
+                <div style="margin-right: 6%;width: 50%">
+                    <div style="line-height: 52px;font-weight: 300;font-size: 2.375em;color: #383838;">Inftime，智能共享日程探索者
+                    </div>
+                    <div style="margin-top: 32px;width: 92%;font-size: 1em;color: #a6a6a6;line-height: 1.4em;">
+                        无论是您需要进行活动管理，还是需要邀请好友加入您的日程，都可以从这里开始</div>
+                </div>
+                <div
+                    style="background-image: url(https://ws3.sinaimg.cn/large/006tNc79ly1g1yt29mi5yj30u40u0wpu.jpg);top: 0;right: 0;width: 50%;height: 100%;background-position: 100%;background-size: contain;background-repeat: no-repeat;-webkit-box-sizing: border-box;box-sizing: border-box;border-width: 0;">
+                </div>
+            </div>
+            <div name="introducation" class="introducation_container" style="margin-top: 0px;">
+                <div name="introducation_box" class="introducation_box">
+                    <div class="introducation_title">跨平台</div>
+                    <div>支持微信小程序、网页端（移动端开发中）</div>
+                </div>
+                <div name="introducation_box" class="introducation_box">
+                    <div class="introducation_title">一键共享</div>
+                    <div>可用微信小程序直接邀请他人加入或加入他人日程，也可以查看好友的日程</div>
+                </div>
+                <div name="introducation_box" class="introducation_box">
+                    <div class="introducation_title">便捷管理</div>
+                    <div>参与成员/完成情况/评论统计，支持一键导出excel/用户备注/一键提醒等诸多功能</div>
+                </div>
+            </div>
+            <div style="width: 100%;display: flex;padding-top: 66px;"> <button v-on:click="navToLogin"
+                    style="cursor:pointer;margin:auto;border: none;font-size: 16px;padding: 14px 40px;border-radius:23px;background-image:linear-gradient(-234deg, #499DF8 0%, #6EC3FC 100%);color:white;width:50%;box-shadow: 0 6px 12px 0 rgba(0, 0, 0, .1);">登录</button>
+            </div>
+            <div class="left_bottom_circle"></div>
+            <div class="right_bottom_circle"></div>
+            <div style="font-size: 12px;position:fixed;bottom: 11px;width:100%;text-align: center;color: #5f5f5f">
+                <div>copyright 2018-2019 inftime.cn All rights reserved 上海蓝瞬信息科技有限公司 沪ICP备17036807号-1</div>
+            </div>
+        </div>
+        <div style="height:60px" v-if="logged==true||logged=='true'"></div>
+        <div class="weui-flex" style="height: 100%;" v-if="logged==true||logged=='true'" id="main_page">
+            <div style="height: 100%;" class="weui-flex" v-if="logged==true||logged=='true'">
+                <div
+                    style="width:350px;margin: 20px;background-color:#F5F5F5;border-radius:4px;box-shadow:0px 4px 7px 0 rgba(0, 0, 0, 0.2);overflow-y: auto;">
+                    <div v-for="item in calendar" v-if="calendar.length>0" class="simple-box"
+                        v-on:click="loadDetail(item.random_id)">
+                        <div style="border-left:5px solid #737373;cursor:pointer;"
+                            v-bind:class="importanceBorder('border',item.td_importance)" class="index_my_create-box">
+                            <div class="weui-flex">
+                                <div class="weui-cell__bd" style="font-size:16px;font-weight:bold;">{{ item.inf_topic }}
+                                </div>
+                                <div class="weui-cell__ft new_importance_tag"
+                                    v-bind:class="importanceBorder('tag',item.td_importance)"
+                                    style="line-height:19px;vertical-align:center;">
+                                    {{item.td_importance==0?"一般":(item.td_importance==1?"中等":"重要")}}</div>
+                            </div>
+                            <div style="color:#666666;margin-top:3px;-webkit-line-clamp:1;" class="weui-media-box__desc"
+                                v-bind:class="missJudge(item.miss)">
+                                {{getInfTime(item)}}{{' '+item.status+' '+(item.miss?'超期':'')}}</div>
+                        </div>
+                    </div>
+                    <div v-if="calendar.length==0" class="simple-box">
+                        <div style="border-left:5px solid #737373;" class="index_my_create-box">
+                            <div class="weui-flex">
+                                <div class="weui-cell__bd" style="font-size:16px;font-weight:bold;">您还没有日程
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="height: 100%;flex: 1;" class="weui-flex" v-if="logged==true||logged=='true'">
+                <div class="weui-flex"
+                    style="width: 100%;margin: 20px;background-color:#F5F5F5;border-radius:5px;box-shadow:0px 4px 7px 0 rgba(0, 0, 0, 0.2);border-radius:4px;">
+                    <div name="left_items" style="flex-direction:column;" class="weui-flex weui-flex__item">
+                        <div class="my_create-cells float_item float_box"
+                            style="padding-top:3px;border-left:8px solid #737373;" v-if="todo.no_load==true">
+                            <div class="without_before-cell" style="padding:5px 15px;font-size:18px;"
+                                v-bind:class="importanceBorder('border',todo.td_importance)">
+                                <div class="weui-cell__bd weui-flex" style="font-weight:bold;position:relative;">
+                                    没有日程详情
+                                </div>
+                            </div>
+                        </div>
+                        <div class="my_create-cells float_item float_box"
+                            style="padding-top:3px;border-left:8px solid #737373;"
+                            v-bind:class="importanceBorder('border',todo.td_importance)" v-if="!todo.no_load">
+                            <div class="without_before-cell" style="padding:6px 15px;font-size:18px;">
+                                <div class="weui-cell__bd weui-flex" style="font-weight:bold;position:relative;">
+                                    {{todo.inf_topic}}
+                                </div>
+                                <div class="weui-cell__ft new_importance_tag"
+                                    v-bind:class="importanceBorder('tag',todo.td_importance)">
+                                    {{todo.td_importance==0?'一般':(todo.td_importance==1?'中等':'重要')}}
+                                </div>
+                            </div>
+                            <div class="without_before-cell" style="font-size:14px;padding:5px 15px;">
+                                <div class="weui-flex__item">
+                                    <span>时间：{{todo.inf_time}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="my_create-cells float_item float_box"
+                            style="padding-top:3px;margin-top: 0px;padding-bottom: 5px;" v-if="!todo.no_load">
+                            <div class="submit-cell" style="font-size:14px;color:#888888">
+                                {{information.inf_detail==""?"无详情":information.inf_detail}}
+                            </div>
+                        </div>
+                        <div class="my_create-cells weui-flex__item float_item float_box"
+                            style="margin-top: 0px;overflow-y: auto;" v-if="!todo.no_load">
+                            <div class="without_before-cell">
+                                <div class="weui-cell__bd" style="font-weight:bold;">评论</div>
+                                <div class="weui-cell__ft" v-on:click="replyDownload"
+                                    style="font-weight: bold;cursor:pointer;"><i class="el-icon-download"></i></div>
+                            </div>
+                            <div v-if="all_reply.length==0"
+                                style="color:#999;padding-right:13px;padding-top:0px;padding-bottom:14px;padding-left:15px;position:relative;font-size:14px">
+                                没有相关评论
+                            </div>
+                            <div style="padding-bottom:3px;border-bottom: 1px solid #f0f0f0;"
+                                class="weui-media-box weui-media-box_text" v-for="(reply,index) in all_reply"
+                                v:if="reply.visible==1">
+                                <div class="weui-flex" style="font-size:15px;">
+                                    <div style="width:100%;" class="weui-flex">
+                                        <img :src="reply.image_url" style="border-radius:2px;"
+                                            class="new_comment_headimg" />
+                                        <div class="weui-flex__item"
+                                            style="position:relative;top:-5px;margin-left:6px;">
+                                            <div class="comment_nickname" style="width:100%;font-weight:bold">
+                                                <span style="font-size:13px;color:#576B95">
+                                                    {{reply.nickname}}{{reply.real_name?"（"+reply.real_name+"）":""}}
+                                                </span>
+                                                <span class="weui-cell__ft"
+                                                    style="font-size:11px;color:gray;float:right;">
+                                                    {{reply.create_time}}
+                                                </span>
+                                            </div>
+                                            <div style="font-size:13px;margin-top:3px;">
+                                                {{reply.attach.length>0?'回复':''}}
+                                                <span style="color:#576B95">
+                                                    {{reply.attach.length>0?reply.attach[0].nickname:''}}
+                                                </span>
+                                                {{reply.content}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div name="right_item" class="weui-cells weui-flex__item float_item float_box" v-if="!todo.no_load"
+                        style="overflow-y: auto;">
+                        <div class="without_before-cell">
+                            <div class="weui-cell__bd" style="font-weight:bold;">参与情况</div>
+                            <div class="weui-cell__ft" style="font-weight: bold;cursor:pointer;"
+                                v-on:click="attendPeopleDownload" v-if="all_reply.length>0"><i
+                                    class="el-icon-download"></i></div>
+                        </div>
+                        <div class="weui-cell weui_image_cell" style="border-bottom: 1px solid #f0f0f0;"
+                            v-for="(person, id) in attend_people">
+                            <div class="weui-cell__hd">
+                                <img v-bind:src="person.image_url"
+                                    style="margin-right: 10px;vertical-align: middle;width:34px; height: 34px;border-radius:3px;" />
+                            </div>
+                            <div class="weui-cell__bd" style="font-size:14px;">
+                                {{person.nickname}}<span
+                                    style="color:gray">{{person.real_name?'-'+person.real_name:''}}</span>
+                            </div>
+                            <img src="https://inftime.cn/web/achieve_red_circle.png" v-if="person.achieve==1"
+                                style="margin-left: 10px;vertical-align: middle;width:33px; height: 33px;border-radius:2px;"></img>
+                        </div>
+                        <div class="weui-cell weui_image_cell" style="border-bottom: 1px solid #f0f0f0;"
+                            v-for="(person, id) in unattend_people">
+                            <div class="weui-cell__hd">
+                                <img v-bind:src="person.image_url" class="unread-head"
+                                    style="margin-right: 10px;vertical-align: middle;width:34px; height: 34px;border-radius:3px;" />
+                            </div>
+                            <div class="weui-cell__bd" style="font-size:14px;">
+                                {{person.nickname}}<span
+                                    style="color:gray">{{person.real_name?'-'+person.real_name:''}}</span>
+                            </div>
+                            <div class="weui-cell__ft" style="font-size: 14px;">未加入</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var targetProtocol = "https:";
+    if (window.location.protocol != targetProtocol)
+        window.location.href = targetProtocol +
+            window.location.href.substring(window.location.protocol.length);
+    var url = location.search; //获取url中"?"符后的字串
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+        var str = url.substr(1);
+        strs = str.split("&");
+        for (var i = 0; i < strs.length; i++) {
+            theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+            console.log("获取请求参数成功")
+        }
+    }
+    //全局变量
+    var dayMilliSeconds = 1000 * 60 * 60 * 24
+    //有权限进行请求，先处理权限问题
+    if (typeof (Storage) !== "undefined") {
+        //如果获取unionid成功而且不为空，则设置参数
+        if (localStorage.unionid != "undefined" && localStorage.unionid != "" && localStorage.unionid) {
+            console.log("获取unionid成功：" + localStorage.unionid)
+            localStorage.setItem("logged", true);
+        } else {
+            //设置logged参数
+            console.log("未登录" + localStorage.unionid)
+            localStorage.setItem("logged", false);
+            //处理为空的情况，则移除
+            if (localStorage.unionid == "") {
+                localStorage.removeItem("unionid");
+            }
+        }
+        if (localStorage.first != "undefined" && localStorage.first != "" && localStorage.first) {
+            // localStorage.setItem("first", true);
+        } else {
+            localStorage.setItem("first", 0);
+        }
+    } else {
+        alert("抱歉，请更换其他浏览器（如Chrome谷歌、Firefox火狐、Safari等），不支持低版本IE浏览器")
+    }
+    var Main = new Vue({
+        el: "#main",
+        data() {
+            return {
+                service: 'https://wafer.inftime.com.cn',
+                logged: false,
+                todo: {
+                    'inf_topic': '没有您的日程',
+                    'no_load': true
+                },
+                information: {
+
+                },
+                people_url: "",
+                reply_url: "",
+                image_url: "https://wx.qlogo.cn/mmopen/vi_32/Pf0YbIo79u1PiaVbS5ibR82spWPH0nNdD1HwWHRApDzALUbFCwoAUEyVC5gYfuJhgTXyibX8yHibbxsPwwM1DNAhsg/132",
+                nickname: "",
+                random_id: "",
+                td_importance: 2,
+                border_array: ['normal_border_color', 'middle_border_color', 'important_border_color'],
+                text_array: ['normal_color', 'middle_color', 'important_color'],
+                tag_array: ['normal_tag', 'middle_tag', 'important_tag'],
+                unattend_people: [],
+                attend_people: [],
+                all_reply: [],
+                ctype: ['normal', 'middle', 'important'],
+                isPhone: false,
+                // isPhone: flag,
+                random_id: theRequest['random_id'] ? theRequest['random_id'] : "vA8P0M7KyC79PEVUkF8rWdhGKX2TSc",
+                load_num: 0,
+                calendar: []
+            }
+        },
+        created(option) {
+            var that = this
+            that.logged = localStorage.logged
+            that.unionid = localStorage.unionid
+            console.log('修改参数unionid:' + that.unionid)
+            console.log('修改参数logged:' + that.logged)
+            that.time_array = [
+                that.getDaysIndex(),
+                ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
+                ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55']
+            ],
+                that.now_time_index = that.getNowPeriod()
+
+            //刷新页面后，如果有code而且没有unionid，则进行登录刷新，并进行基础加载
+            if (theRequest['code'] != "" && theRequest['code'] && (that.unionid == undefined)) {
+                logging = true
+                axios.get(that.service + '/weapp/webselect', {
+                    params: {
+                        code: theRequest['code'],
+                        code_to_user: true
+                    }
+                })
+                    .then(function (res) {
+                        //如果能够寻找到相关信息
+                        if (res.data.status == 1 || res.data.status == "1") {
+                            that.unionid = res.data.data.unionid
+                            that.logged = true
+                            localStorage.setItem("unionid", res.data.data.unionid);
+                            localStorage.setItem("logged", true);
+                            that.loadBasic()
+                        } else {
+                            that.$message.error('抱歉，请先于微信小程序或公众号登录');
+                            window.location.hred = "https://inftime.cn/index.html"
+                        }
+
+                    });
+            } else {
+                //由于logged参数已经处理，所以直接logged判断即可，判断logged是否已经登录，则执行刷新代码
+                if (localStorage.logged == true || localStorage.logged == "true") {
+                    //基础加载
+                    that.loadBasic()
+                }
+            }
+            // var userAgentInfo = navigator.userAgent;
+            // var Agents = new Array("Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod");
+            // var flag = false;
+            // for (var v = 0; v < Agents.length; v++) {
+            //     if (userAgentInfo.indexOf(Agents[v]) > 0) {
+            //         flag = true;
+            //         break;
+            //     }
+            // }
+            // console.log(flag)
+            // that.isPhone = flag
+            // if (that.isPhone) {
+            //     alert('页面样式暂未兼容手机，建议使用电脑访问')
+            // }
+        },
+        computed: {
+
+        },
+        methods: {
+            loadBasic: function () {
+                var that = this
+                that.loadFunction("main_page")
+                axios.get(that.service + '/weapp/webselect', {
+                    params: {
+                        unionid: that.unionid,
+                        select_calendar: true
+                    }
+                })
+                    .then(function (res) {
+                        console.log(res.data)
+                        that.calendar = res.data.data.calendar_list
+                        that.timeUpdate()
+                        that.loadDetail(that.calendar[0]["random_id"])
+                    });
+                axios.get(that.service + '/weapp/webselect', {
+                    params: {
+                        unionid: that.unionid,
+                        select_user: true
+                    }
+                })
+                    .then(function (res) {
+                        console.log(res.data)
+                        that.nickname = res.data.data.nickname
+                        that.image_url = res.data.data.image_url
+                    });
+            },
+            loadFunction: function (target) {
+                var that = this
+                const loading = that.$loading({
+                    lock: true,
+                    target: "#" + target,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(255, 255, 255, 0.5)'
+                });
+                setTimeout(() => {
+                    loading.close();
+                }, 2000);
+            },
+            importanceBorder: function (class_type, td_importance) {
+                var that = this
+                if (class_type == 'tag') {
+                    var class_txt = that.tag_array[td_importance]
+                    return class_txt
+                }
+                if (class_type == 'border') {
+                    return that.border_array[td_importance]
+                }
+            },
+            showTag: function () {
+                document.getElementById("cancel_box").style.display = 'block';
+            },
+            hideTag: function () {
+                setTimeout(() => {
+                    document.getElementById("cancel_box").style.display = 'none';
+                }, 700);
+            },
+            getInfTime: function (item) {
+                var that = this
+                var time_array = that.time_array
+                var time_string = item.inf_time
+                if (item.inf_time_index) {
+                    time_string = time_array[0][item.inf_time_index[0]] + '  ' + time_array[1][item.inf_time_index[1]] + ':' + time_array[2][item.inf_time_index[2]]
+                }
+                return time_string;
+            },
+            loadDetail: function (e) {
+                console.log(e)
+                //如果不为空而且不和上一个相同，则加载
+                var that = this
+                if (e != "" && e != that.random_id) {
+                    that.random_id = e
+                    axios.get(that.service + '/weapp/webselect', {
+                        params: {
+                            random_id: that.random_id,
+                            unionid: that.unionid,
+                            select_basic_todo: true
+                        }
+                    })
+                        .then(function (res) {
+                            console.log(res.data)
+                            that.information = res.data.data.information
+                            that.todo = res.data.data.todo
+                            that.td_importance = parseInt(res.data.data.todo['td_importance'])
+                            that.people_url = "https://images.inftime.com.cn/people" + that.information[
+                                'invite_id'] +
+                                ".xlsx" + "?v=" + new Date().getTime(),
+                                that.reply_url = "https://images.inftime.com.cn/reply" + that.information[
+                                'invite_id'] + ".xlsx" + "?v=" + new Date().getTime()
+                            that.load_num = that.load_num + 1
+                        });
+                    axios.get(that.service + '/weapp/webselect', {
+                        params: {
+                            random_id: that.random_id,
+                            update_excel: true
+                        }
+                    })
+                        .then(function (res) {
+                            console.log(res.data)
+                        });
+                    axios.get(that.service + '/weapp/webselect', {
+                        params: {
+                            random_id: that.random_id,
+                            select_people: true
+                        }
+                    })
+                        .then(function (res) {
+                            // console.log( res.data.unattend_people)
+                            // console.log( res.data.attend_people)
+                            that.unattend_people = res.data.data.unattend_people
+                            that.attend_people = res.data.data.attend_people
+                            that.load_num = that.load_num + 1
+                        });
+                    axios.get(that.service + '/weapp/webselect', {
+                        params: {
+                            random_id: that.random_id,
+                            select_reply: true
+                        }
+                    })
+                        .then(function (res) {
+                            console.log(res.data.data.all_reply)
+                            that.all_reply = res.data.data.all_reply
+                            that.load_num = that.load_num + 1
+                        });
+                }
+            },
+            getNowPeriod: function () {
+                var day, hour, minute
+                var relDate = new Date()
+                day = parseInt((Date.parse(relDate) - 1514736000000) / dayMilliSeconds)
+                hour = relDate.getHours()
+                minute = parseInt(relDate.getMinutes() / 5)
+                return [day, hour, minute]
+            },
+            importanceText: function () {
+                var that = this
+                return that.text_array[that.td_importance]
+            },
+            phoneWidth: function () {
+                var that = this
+                if (that.isPhone) {
+                    return 'isPhone'
+                } else {
+                    return 'isPC'
+                }
+            },
+            showImg: function () {
+                console.log("showImg")
+                document.getElementById("cancel_box").style.display = 'block';
+            },
+            hideImg: function () {
+                console.log("hideImg")
+                document.getElementById("cancel_box").style.display = 'none';
+            },
+            navToLogin: function () {
+                if (localStorage.first == 0 || localStorage.first == '0') {
+                    // localStorage.setItem("first", 1);
+                    this.$alert('当前仅支持微信登录，需要您已使用过小程序或服务号', '提醒', {
+                        confirmButtonText: '知道了',
+                        callback: action => {
+                            localStorage.setItem("first", 1);
+                            window.location.href = "https://open.weixin.qq.com/connect/qrconnect?appid=wxfdac304d41d4bd07&redirect_uri=https%3a%2f%2finftime.cn%2findex.html&response_type=code&scope=snsapi_login#wechat_redirect";
+                        }
+                    });
+                } else {
+                    window.location.href = "https://open.weixin.qq.com/connect/qrconnect?appid=wxfdac304d41d4bd07&redirect_uri=https%3a%2f%2finftime.cn%2findex.html&response_type=code&scope=snsapi_login#wechat_redirect";
+                }
+            },
+            boxChoose: function (e) {
+                console.log(e)
+                if (e == "login_out") {
+                    this.$confirm('是否退出该账号?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.$message({
+                            type: 'success',
+                            message: '退出成功!'
+                        });
+                        this.loginOut()
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消'
+                        });
+                    });
+                }
+            },
+            loginOut: function () {
+                var that = this
+                that.logged = false
+                that.unionid = ""
+                localStorage.removeItem("unionid")
+                localStorage.removeItem("logged")
+                window.location.href = "http://inftime.cn/index.html"
+            },
+            timeUpdate: function () {
+                var that = this
+                var calendar = that.calendar
+                for (let i = 0; i < calendar.length; i++) {
+                    // var inf_time = calendar[i].inf_time
+                    let miss = false
+                    let status = ""
+                    let bold = false
+                    calendar[i].inf_time_index = that.getPeriod(calendar[i].inf_time)
+                    if (calendar[i].inf_time_index[0] < that.now_time_index[0]) {
+                        if (calendar[i].inf_time_index[0] == that.now_time_index[0] - 1) {
+                            status = "昨天"
+                        }
+                        miss = true
+                        bold = true
+                    } else if (calendar[i].inf_time_index[0] == that.now_time_index[0]) {
+                        status = "今天"
+                        if (calendar[i].inf_time_index[1] < that.now_time_index[1]) {
+                            miss = true
+                        }
+                        bold = true
+                    } else if (calendar[i].inf_time_index[0] == that.now_time_index[0] + 1) {
+                        status = "明天"
+                        bold = true
+                    } else {
+
+                    }
+
+                    calendar[i].miss = miss
+                    calendar[i].bold = bold
+                    calendar[i].status = status
+                    console.log("刷新参数")
+                }
+                setTimeout(() => {
+                    that.calendar = calendar
+                    console.log(calendar)
+                }, 1000);
+            },
+
+            getPeriod: function (useDate) {
+                var day, hour, minute
+                var relDate = new Date(Date.parse(useDate.replace(/-/g, "/")))
+                day = parseInt((Date.parse(relDate) - 1514736000000) / dayMilliSeconds)
+                hour = relDate.getHours()
+                minute = parseInt(relDate.getMinutes() / 5)
+                return [day, hour, minute]
+            },
+
+
+            getDaysIndex: function () {
+                let ret = " ", timearray = [], i = 0
+                let d1Ms = 1514736000000, d2Ms = 1577808000000
+                var week = ["日", "一", "二", "三", "四", "五", "六"]
+                //d2Ms = d2Ms + dayMilliSeconds * 100
+                for (d1Ms; d1Ms <= d2Ms; d1Ms += dayMilliSeconds) {
+                    var day = new Date(d1Ms);
+                    timearray[i] = "星期" + week[day.getDay()] + "  " + (day.getMonth() + 1) + "月" + day.getDate() + "日"
+                    //console.log(timearray[i])
+                    i++
+                }
+                return timearray
+            },
+            missJudge: function (miss) {
+                if (miss) {
+                    return "miss_color"
+                } else {
+                    return ""
+                }
+            },
+            attendPeopleDownload: function () {
+                this.$confirm('是否将参与情况导出为excel?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'info'
+                }).then(() => {
+                    window.location.href = this.people_url;
+                }).catch(() => {
+
+                });
+
+            },
+            replyDownload: function () {
+                this.$confirm('是否将评论区导出为excel?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'info'
+                }).then(() => {
+                    window.location.href = this.reply_url;
+                }).catch(() => {
+
+                });
+
+            }
+
+        },
+    })
+</script>
+
+</html>
